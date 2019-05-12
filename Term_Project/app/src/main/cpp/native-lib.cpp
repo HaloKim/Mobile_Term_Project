@@ -3,14 +3,16 @@
 using namespace cv;
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_term_1project_MainActivity_ConvertRGBtoGray(JNIEnv *env, jobject instance,
-                                                             jlong matAddrInput,
-                                                             jlong matAddrResult) {
+Java_com_example_term_1project_MainActivity_imageprocessing(JNIEnv *env, jobject instance,
+                                                            jlong inputImage, jlong outputImage,
+                                                            jint th1, jint th2) {
 
-    // 입력 RGBA 이미지를 GRAY 이미지로 변환
-    Mat &matInput = *(Mat *)matAddrInput;
-    Mat &matResult = *(Mat *)matAddrResult;
+    Mat &img_input = *(Mat *) inputImage;
+    Mat &img_output = *(Mat *) outputImage;
 
-    cvtColor(matInput, matResult, COLOR_RGBA2GRAY);
+    cvtColor( img_input, img_output, COLOR_RGB2GRAY);
+
+    blur( img_output, img_output, Size(5,5) );
+    Canny( img_output, img_output, th1, th2);
 
 }
