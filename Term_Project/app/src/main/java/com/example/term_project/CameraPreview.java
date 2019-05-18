@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.List;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -18,6 +20,7 @@ import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
@@ -25,8 +28,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 
 // 카메라에서 가져온 영상을 보여주는 카메라 프리뷰 클래스
 class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
@@ -44,34 +45,17 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
     private boolean isPreview = false;
 
     private AppCompatActivity mActivity;
-
-
     public CameraPreview(Context context, AppCompatActivity activity, int cameraID, SurfaceView surfaceView) {
         super(context);
-
-
         Log.d("@@@", "Preview");
-
-
-
         mActivity = activity;
         mCameraID = cameraID;
         mSurfaceView = surfaceView;
-
-
         mSurfaceView.setVisibility(View.VISIBLE);
-
-
         // SurfaceHolder.Callback를 등록하여 surface의 생성 및 해제 시점을 감지
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
-
     }
-
-
-
-
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // We purposely disregard child measurements because act as a
@@ -85,9 +69,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
             mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
         }
     }
-
-
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (changed && getChildCount() > 0) {
@@ -116,8 +97,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         }
     }
 
-
-
     // Surface가 생성되었을 때 어디에 화면에 프리뷰를 출력할지 알려줘야 한다.
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -128,8 +107,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
             // Camera is not available (in use or does not exist)
             Log.e(TAG, "Camera " + mCameraID + " is not available: " + e.getMessage());
         }
-
-
         // retrieve camera's info.
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         Camera.getCameraInfo(mCameraID, cameraInfo);
@@ -139,8 +116,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 
         int orientation = calculatePreviewOrientation(mCameraInfo, mDisplayOrientation);
         mCamera.setDisplayOrientation(orientation);
-
-
 
         mSupportedPreviewSizes =  mCamera.getParameters().getSupportedPreviewSizes();
         requestLayout();
@@ -160,8 +135,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         try {
 
             mCamera.setPreviewDisplay(holder);
-
-
             // Important: Call startPreview() to start updating the preview
             // surface. Preview must be started before you can take a picture.
             mCamera.startPreview();
@@ -172,9 +145,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         }
 
     }
-
-
-
     public void surfaceDestroyed(SurfaceHolder holder) {
         // Surface will be destroyed when we return, so stop the preview.
         // Release the camera for other applications.
@@ -185,10 +155,17 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
             mCamera = null;
             isPreview = false;
         }
+        try {
+            if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                Log.d("Permission", "Granted");
+                cameraFocusQR.invalidate();
+                return;
+            }
+        } catch (IOException ie) {
+            Log.e("CAMERA SOURCE", ie.getMessage());
+        }
 
     }
-
-
     private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.1;
         double targetRatio = (double) w / h;
@@ -221,9 +198,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         }
         return optimalSize;
     }
-
-
-
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 
         // If your preview can change or rotate, take care of those events here.
@@ -257,9 +231,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         }
 
     }
-
-
-
     /**
      * 안드로이드 디바이스 방향에 맞는 카메라 프리뷰를 화면에 보여주기 위해 계산합니다.
      */
@@ -292,14 +263,10 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         return result;
     }
 
-
-
     public void takePicture(){
 
         mCamera.takePicture(shutterCallback, rawCallback, jpegCallback);
     }
-
-
     Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
         public void onShutter() {
 
@@ -312,7 +279,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         }
     };
 
-
     //참고 : http://stackoverflow.com/q/37135675
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -321,7 +287,6 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
             int w = camera.getParameters().getPictureSize().width;
             int h = camera.getParameters().getPictureSize().height;
             int orientation = calculatePreviewOrientation(mCameraInfo, mDisplayOrientation);
-
 
             //byte array를 bitmap으로 변환
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -344,16 +309,11 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 
         }
     };
-
-
-
     private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
 
         @Override
         protected Void doInBackground(byte[]... data) {
             FileOutputStream outStream = null;
-
-
             try {
 
                 File path = new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/camtest");
@@ -374,15 +334,10 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
 
 
                 mCamera.startPreview();
-
-
                 // 갤러리에 반영
                 Intent mediaScanIntent = new Intent( Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 mediaScanIntent.setData(Uri.fromFile(outputFile));
                 getContext().sendBroadcast(mediaScanIntent);
-
-
-
                 try {
                     mCamera.setPreviewDisplay(mHolder);
                     mCamera.startPreview();

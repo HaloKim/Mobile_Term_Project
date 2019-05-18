@@ -1,4 +1,5 @@
 package com.example.term_project;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,24 +20,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-
 import java.io.IOException;
 
 
 public class openCV extends AppCompatActivity {
-
-
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
-
-
     ImageView imageVIewInput;
-    ImageView imageVIewOuput;
+    public ImageView imageVIewOuput;//변환된 이미지
+    public static Context context;
+    public ImageView test;
     private Mat img_input;
     private Mat img_output;
     private int threshold1=50;
@@ -46,25 +43,22 @@ public class openCV extends AppCompatActivity {
     private final int GET_GALLERY_IMAGE = 200;
 
     boolean isReady = false;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opencv);
-
+        context = this;
         imageVIewInput = (ImageView)findViewById(R.id.imageViewInput);
         imageVIewOuput = (ImageView)findViewById(R.id.imageViewOutput);
 
+        //엣지검출버튼
         Button Button = (Button)findViewById(R.id.button);
         Button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-
                 imageprocess_and_showResult(threshold1, threshold2);
             }
         });
-
-
+        //상단 갤러리 이동버튼
         imageVIewInput.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -74,14 +68,12 @@ public class openCV extends AppCompatActivity {
             }
         });
 
-
         final TextView textView1 = (TextView)findViewById(R.id.textView_threshold1);
         SeekBar seekBar1=(SeekBar)findViewById(R.id.seekBar_threshold1);
         seekBar1.setProgress(threshold1);
         seekBar1.setMax(200);
         seekBar1.setMin(0);
         seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -90,97 +82,70 @@ public class openCV extends AppCompatActivity {
                 imageprocess_and_showResult(threshold1, threshold2);
 
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
-
-
         final TextView textView2 = (TextView)findViewById(R.id.textView_threshold2);
         SeekBar seekBar2=(SeekBar)findViewById(R.id.seekBar_threshold2);
         seekBar2.setProgress(threshold2);
         seekBar2.setMax(200);
         seekBar2.setMin(0);
         seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 threshold2 = progress;
                 textView2.setText(threshold2+"");
                 imageprocess_and_showResult(threshold1, threshold2);
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
-
-
         if (!hasPermissions(PERMISSIONS)) { //퍼미션 허가를 했었는지 여부를 확인
             requestNecessaryPermissions(PERMISSIONS);//퍼미션 허가안되어 있다면 사용자에게 요청
         }
-
     }
-
     @Override
     protected void onResume() {
         super.onResume();
 
         isReady = true;
     }
-
     public native void imageprocessing(long inputImage, long outputImage, int th1, int th2);
 
-    private void imageprocess_and_showResult(int th1, int th2) {
-
+    //이미지 변환 후 출력
+    public void imageprocess_and_showResult(int th1, int th2)
+    {
         if (isReady==false) return;
-
         if (img_output == null)
             img_output = new Mat();
-
         imageprocessing(img_input.getNativeObjAddr(), img_output.getNativeObjAddr(), th1, th2);
-
-
         Bitmap bitmapOutput = Bitmap.createBitmap(img_output.cols(), img_output.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(img_output, bitmapOutput);
         imageVIewOuput.setImageBitmap(bitmapOutput);
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if ( requestCode == GET_GALLERY_IMAGE){
-
-
             if (data.getData() != null) {
                 Uri uri = data.getData();
-
                 try {
                     String path = getRealPathFromURI(uri);
                     int orientation = getOrientationOfImage(path); // 런타임 퍼미션 필요
                     Bitmap temp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                     Bitmap bitmap = getRotatedBitmap(temp, orientation);
                     imageVIewInput.setImageBitmap(bitmap);
-
                     img_input = new Mat();
                     Bitmap bmp32 = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                     Utils.bitmapToMat(bmp32, img_input);
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -189,31 +154,24 @@ public class openCV extends AppCompatActivity {
 
         }
     }
-
-
     private String getRealPathFromURI(Uri contentUri) {
 
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         cursor.moveToFirst();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
         return cursor.getString(column_index);
     }
-
     // 출처 - http://snowdeer.github.io/android/2016/02/02/android-image-rotation/
     public int getOrientationOfImage(String filepath) {
         ExifInterface exif = null;
-
         try {
             exif = new ExifInterface(filepath);
         } catch (IOException e) {
             Log.d("@@@", e.toString());
             return -1;
         }
-
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-
         if (orientation != -1) {
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
@@ -268,8 +226,6 @@ public class openCV extends AppCompatActivity {
         }
     }
 
-
-
     @Override
     public void onRequestPermissionsResult(int permsRequestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         switch(permsRequestCode){
@@ -312,4 +268,10 @@ public class openCV extends AppCompatActivity {
         });
         myDialog.show();
     }
+
+    public void back(View v)
+    {
+        finish();
+    }
+
 }

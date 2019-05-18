@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.term_project">
-
-    <!-- 앱에서 필요한 모든 퍼미션은 매니페스트 파일에 선언해야 합니다.
-  안드로이드 6.0 이상에서는 실행 중에 퍼미션을 요청합니다.           -->
+    <!--
+  앱에서 필요한 모든 퍼미션은 매니페스트 파일에 선언해야 합니다.
+  안드로이드 6.0 이상에서는 실행 중에 퍼미션을 요청합니다.
+    -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -14,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".openCV" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

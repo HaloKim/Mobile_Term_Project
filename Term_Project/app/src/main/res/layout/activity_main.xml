@@ -7,7 +7,7 @@
     <SurfaceView
         android:id="@+id/camera_preview_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <Button
         android:id="@+id/button_main_capture"
@@ -15,5 +15,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="캡처" />
+    <Button
+        android:id="@+id/button_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="필터" />
 
 </FrameLayout>

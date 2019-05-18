@@ -61,6 +61,12 @@
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:text="에지 검출하기" />
+    <Button
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="종료" />
 
 
 </LinearLayout>
