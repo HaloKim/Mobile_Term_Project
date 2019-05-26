@@ -8,20 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <com.example.term_project.floatingImage
-        android:id="@+id/eex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <Button
+    <ImageButton
         android:id="@+id/button_main_capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="캡처" />
-    <Button
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_gravity="center_horizontal|bottom"
+        android:src="@drawable/camera_button_state"
+        android:background="@android:color/transparent"
+        />
+    <ImageButton
         android:id="@+id/button_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="필터" />
+        android:layout_gravity="right|bottom"
+        android:src="@drawable/opencv_button_state"
+        android:background="@android:color/transparent"/>
 </FrameLayout>

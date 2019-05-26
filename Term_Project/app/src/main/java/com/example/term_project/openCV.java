@@ -33,6 +33,7 @@ public class openCV extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
     ImageView imageVIewInput;
+    Bitmap bitmapOutput;
     public ImageView imageVIewOuput;//변환된 이미지
     public String ipath;
     public static Context context;
@@ -40,7 +41,6 @@ public class openCV extends AppCompatActivity {
     private Mat img_output;
     private int threshold1=50;
     private int threshold2=150;
-    Bitmap bitmapOutput;
     private static final String TAG = "opencv";
     private final int GET_GALLERY_IMAGE = 200;
     boolean isReady = false;
@@ -52,10 +52,18 @@ public class openCV extends AppCompatActivity {
         imageVIewInput = (ImageView)findViewById(R.id.imageViewInput);
         imageVIewOuput = (ImageView)findViewById(R.id.imageViewOutput);
         //엣지검출버튼
-        Button Button = (Button)findViewById(R.id.button);
-        Button.setOnClickListener(new View.OnClickListener(){
+        Button button = (Button)findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                imageprocess_and_showResult(threshold1, threshold2);
+                try {
+                    imageprocess_and_showResult(threshold1, threshold2);
+                }catch (Exception e){Toast.makeText(getApplicationContext(),"이미지를 선택해주세요.",Toast.LENGTH_SHORT).show();}
+            }
+        });
+        Button back = (Button)findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                finish();
             }
         });
         //상단 갤러리 이동버튼
@@ -131,7 +139,7 @@ public class openCV extends AppCompatActivity {
         try{
             tempFile.createNewFile();  // 파일을 생성해주고
             FileOutputStream out = new FileOutputStream(tempFile);
-            bitmapOutput.compress(Bitmap.CompressFormat.JPEG, 10 , out);  // 넘거 받은 bitmap을 jpeg(손실압축)으로 저장해줌
+            bitmapOutput.compress(Bitmap.CompressFormat.JPEG, 10 , out);  // 넘겨 받은 bitmap을 jpeg(손실압축)으로 저장해줌
             out.close(); // 마무리로 닫아줍니다.
             Toast.makeText(this, "이미지가 지정 되었습니다", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
@@ -147,8 +155,8 @@ public class openCV extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ( requestCode == GET_GALLERY_IMAGE){
             if (data.getData() != null) {
-                Uri uri = data.getData();
                 try {
+                    Uri uri = data.getData();
                     String path = getRealPathFromURI(uri);
                     int orientation = getOrientationOfImage(path); // 런타임 퍼미션 필요
                     Bitmap temp = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -164,7 +172,6 @@ public class openCV extends AppCompatActivity {
         }
     }
     private String getRealPathFromURI(Uri contentUri) {
-
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
         cursor.moveToFirst();
@@ -185,10 +192,8 @@ public class openCV extends AppCompatActivity {
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     return 90;
-
                 case ExifInterface.ORIENTATION_ROTATE_180:
                     return 180;
-
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     return 270;
             }
@@ -206,7 +211,6 @@ public class openCV extends AppCompatActivity {
     // 퍼미션 코드
     static final int PERMISSION_REQUEST_CODE = 1;
     String[] PERMISSIONS  = {"android.permission.WRITE_EXTERNAL_STORAGE"};
-
     private boolean hasPermissions(String[] permissions) {
         int ret = 0;
         //스트링 배열에 있는 퍼미션들의 허가 상태 여부 확인
@@ -229,13 +233,10 @@ public class openCV extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int permsRequestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         switch(permsRequestCode){
-
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0) {
                     boolean writeAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
                         if (!writeAccepted )
                         {
                             showDialogforPermission("앱을 실행하려면 퍼미션을 허가하셔야합니다.");
@@ -247,7 +248,6 @@ public class openCV extends AppCompatActivity {
         }
     }
     private void showDialogforPermission(String msg) {
-
         final AlertDialog.Builder myDialog = new AlertDialog.Builder(  openCV.this);
         myDialog.setTitle("알림");
         myDialog.setMessage(msg);
@@ -257,7 +257,6 @@ public class openCV extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
                 }
-
             }
         });
         myDialog.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
@@ -267,8 +266,11 @@ public class openCV extends AppCompatActivity {
         });
         myDialog.show();
     }
-    public void back(View v)
-    {
+    @Override//뒤로가기버튼이눌렸을때
+    public void onBackPressed() {
+        if(ipath==null)
+            Toast.makeText(this, "지정된 이미지가 없습니다!", Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
         finish();
     }
 }

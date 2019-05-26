@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-
 public class floatingImage extends View{
     Bitmap bm;
     Bitmap resize_bitmap;
@@ -25,7 +24,7 @@ public class floatingImage extends View{
             bm = BitmapFactory.decodeFile(imgpath);//비트맵저장
             resize_bitmap = Bitmap.createScaledBitmap(bm, width, height, true);//비트맵 화면사이즈로 재조정
             canvas.drawBitmap(resize_bitmap, 0, 0, alpha);//캔버스에 재조정한 비트맵이미지를 그려준다.
-        }catch(Exception e){}
+        }catch(Exception e){ }
         super.onDraw(canvas);
     }
 }

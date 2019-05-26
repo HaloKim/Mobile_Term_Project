@@ -264,8 +264,7 @@ class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
                 outStream.write(data[0]);
                 outStream.flush();
                 outStream.close();
-                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to "
-                        + outputFile.getAbsolutePath());
+                Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to " + outputFile.getAbsolutePath());
                 mCamera.startPreview();
                 // 갤러리에 반영
                 Intent mediaScanIntent = new Intent( Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
