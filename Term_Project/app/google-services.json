@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "566901634820",
+    "firebase_url": "https://mobile-cac28.firebaseio.com",
+    "project_id": "mobile-cac28",
+    "storage_bucket": "mobile-cac28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566901634820:android:f1acde16f7e9cc21",
+        "android_client_info": {
+          "package_name": "com.example.term_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566901634820-7g832aopals65p1ndubgrbkkohs0s1b6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6NStNHYzv5itOu5GkuiQ3PLioikLmsEw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566901634820-7g832aopals65p1ndubgrbkkohs0s1b6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
