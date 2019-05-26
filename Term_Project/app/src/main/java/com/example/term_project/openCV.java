@@ -57,6 +57,7 @@ public class openCV extends AppCompatActivity {
             public void onClick(View v){
                 try {
                     imageprocess_and_showResult(threshold1, threshold2);
+                    Toast.makeText(getApplicationContext(), "이미지가 지정 되었습니다", Toast.LENGTH_SHORT).show();
                 }catch (Exception e){Toast.makeText(getApplicationContext(),"이미지를 선택해주세요.",Toast.LENGTH_SHORT).show();}
             }
         });
@@ -141,7 +142,6 @@ public class openCV extends AppCompatActivity {
             FileOutputStream out = new FileOutputStream(tempFile);
             bitmapOutput.compress(Bitmap.CompressFormat.JPEG, 10 , out);  // 넘겨 받은 bitmap을 jpeg(손실압축)으로 저장해줌
             out.close(); // 마무리로 닫아줍니다.
-            Toast.makeText(this, "이미지가 지정 되었습니다", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
