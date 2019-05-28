@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-set(pathPROJECT /Users/halo/Term_Project)
+set(pathPROJECT C:/Users/user/git/Mobile/Mobile_Term_Project/Term_Project)
 set(pathOPENCV ${pathPROJECT}/openCV)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
@@ -19,7 +19,6 @@ include_directories(${pathOPENCV}/native/jni/include)
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
-
 add_library( # Sets the name of the library.
         native-lib
 
@@ -34,7 +33,6 @@ add_library( # Sets the name of the library.
 add_library( lib_opencv SHARED IMPORTED )
 
 set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${pathLIBOPENCV_JAVA})
-
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -61,3 +59,5 @@ target_link_libraries( # Specifies the target library.
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib} )
+
+
