@@ -3,9 +3,8 @@
 using namespace cv;
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_term_1project_openCV_imageprocessing(JNIEnv *env, jobject instance,
-                                                            jlong inputImage, jlong outputImage,
-                                                            jint th1, jint th2) {
+Java_com_Upick_term_1project_openCV_imageprocessing(JNIEnv *env, jobject instance, jlong inputImage,
+                                                    jlong outputImage, jint th1, jint th2) {
 
     Mat &img_input = *(Mat *) inputImage;
     Mat &img_output = *(Mat *) outputImage;
