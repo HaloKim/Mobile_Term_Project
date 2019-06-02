@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:id="@+id/image_upload"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <EditText
+        android:id="@+id/txt_tag"
+        android:background="@android:color/white"
+        android:hint="태그를 입력해주세요"
+        android:layout_alignBottom="@+id/image_upload"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/maplestory_light"
+        android:inputType="text"
+        />
+    <ImageButton
+        android:id="@+id/button_upload"
+        android:src="@drawable/ic_file_upload"
+        android:layout_alignRight="@+id/txt_tag"
+        android:layout_alignBottom="@+id/image_upload"
+        android:background="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        />
+</RelativeLayout>

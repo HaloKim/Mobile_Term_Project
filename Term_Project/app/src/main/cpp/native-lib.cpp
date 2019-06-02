@@ -3,7 +3,7 @@
 using namespace cv;
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_term_1project_MainActivity_imageprocessing(JNIEnv *env, jobject instance,
+Java_com_example_term_1project_openCV_imageprocessing(JNIEnv *env, jobject instance,
                                                             jlong inputImage, jlong outputImage,
                                                             jint th1, jint th2) {
 
