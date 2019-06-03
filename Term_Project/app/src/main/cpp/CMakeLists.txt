@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-set(pathPROJECT /Users/halo/Term_Project)
+set(pathPROJECT /Users/halo/Downloads/Term_Project)
 set(pathOPENCV ${pathPROJECT}/openCV)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
